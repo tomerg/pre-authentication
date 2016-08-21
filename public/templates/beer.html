@@ -1,0 +1,28 @@
+<div class="page-header">
+  <a href="/#/home">back</a>
+
+  <h3>
+    <span>{{beer.name}}</span>
+  </h3>
+</div>
+
+<div ng-repeat="review in beer.reviews track by $index">
+  <p class="review-body">
+    <i ng-click="removeReview(review)" class="fa fa-times remove"></i>
+    {{review.text}}
+  </p>
+
+  review by <strong>{{review.name}}</strong>
+
+  <hr>
+</div>
+
+<form ng-submit="addReview()">
+  <h3>Add a new review</h3>
+
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Review" ng-model="body"></input>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Post</button>
+</form>
