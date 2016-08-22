@@ -12,7 +12,11 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
       templateUrl: '/templates/beer.html',
       controller: 'BeersCtrl'
     })
-jr
+    .state('register', {
+      url: '/register',
+      templateUrl: '/templates/register.html',
+      controller: 'AuthCtrl'
+    })
 
   $urlRouterProvider.otherwise('home');
 }]);
