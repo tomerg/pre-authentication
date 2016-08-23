@@ -83,6 +83,19 @@ app.post('/beers/:id/reviews', function(req, res, next) {
   });
 });
 
+var LocalStrategy = require('passport-local').Strategy;
+
+passport.use('register', new LocalStrategy(function (username, password, done) {
+  var user = {
+    username: username,
+    password: password
+  }
+
+  console.log(user);
+
+  done(null, user);
+}));
+
 app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
   Beer.findById(req.params.beer, function (err, beer) {
     for (var i = 0; i < beer.reviews.length; i ++) {
