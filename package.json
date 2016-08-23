@@ -1,10 +1,10 @@
 {
   "name": "beerlist-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,16 @@
     "bootstrap": "^3.3.6",
     "ejs": "^2.4.1",
     "express": "^4.14.0",
+    "express-session": "^1.14.0",
     "mongoose": "^4.4.12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elevationacademy/beerlist-pre-auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Elevationacademy/beerlist-pre-auth/issues"
+  },
+  "homepage": "https://github.com/Elevationacademy/beerlist-pre-auth#readme",
+  "description": ""
 }
