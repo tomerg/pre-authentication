@@ -99,10 +99,20 @@ app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
 });
 
 passport.serializeUser(function (user, done) {
+  user = {
+    username: user.username,
+    _id: user._id
+  };
+
   done(null, user);
 });
 
 passport.deserializeUser(function (user, done) {
+  user = {
+    username: user.username,
+    _id: user._id
+  };
+
   done(null, user);
 });
 
@@ -149,7 +159,7 @@ passport.use('login', new LocalStrategy(function (username, password, done) {
    User.findOne({ 'username': username }, function (err, user) {
      // In case of any error return
      if (err) {
-       console.log('Error in SignUp: ' + err);
+       console.log('Error in Logging in: ' + err);
        return done(err);
      }
 

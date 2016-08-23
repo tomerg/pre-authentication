@@ -20,7 +20,7 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
     .state('login', {
       url: '/login',
       templateUrl: '/templates/login.html',
-      controller: 'loginCtrl'
+      controller: 'AuthCtrl'
     })
 
   $urlRouterProvider.otherwise('home');
