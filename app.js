@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost/beers');
 
 var Beer = require("./models/BeerModel");
 var Review = require("./models/ReviewModel");
+var User = require("./models/UserModel");
 
 var app = express();
 
@@ -83,19 +84,6 @@ app.post('/beers/:id/reviews', function(req, res, next) {
   });
 });
 
-var LocalStrategy = require('passport-local').Strategy;
-
-passport.use('register', new LocalStrategy(function (username, password, done) {
-  var user = {
-    username: username,
-    password: password
-  }
-
-  console.log(user);
-
-  done(null, user);
-}));
-
 app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
   Beer.findById(req.params.beer, function (err, beer) {
     for (var i = 0; i < beer.reviews.length; i ++) {
@@ -110,8 +98,101 @@ app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
   });
 });
 
-app.post('/register', passport.authenticate('register'), function (req, res) {
-  res.json(req.user);
+passport.serializeUser(function (user, done) {
+  done(null, user);
 });
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
+var LocalStrategy = require('passport-local').Strategy;
+
+// instance of register local strategy
+passport.use('register', new LocalStrategy(function (username, password, done) {
+  User.findOne({ 'username': username }, function (err, user) {
+    // In case of any error return
+    if (err) {
+      console.log('Error in SignUp: ' + err);
+      return done(err);
+    }
+
+    // already exists
+    if (user) {
+      console.log('User already exists');
+      return done(null, false);
+    } else {
+      // if there is no user with that matches
+      // create the user
+      var newUser = new User();
+
+      // set the user's local credentials
+      newUser.username = username;
+      newUser.password = password;    // Note: Should create a hash out of this plain password!
+
+      // save the user
+      newUser.save(function (err) {
+        if (err) {
+          console.log('Error in Saving user: ' + err);
+          throw err;
+        }
+
+        console.log('User Registration successful');
+        return done(null, newUser);
+      });
+    }
+  });
+}));
+
+// instance of login local strategy
+passport.use('login', new LocalStrategy(function (username, password, done) {
+   User.findOne({ 'username': username }, function (err, user) {
+     // In case of any error return
+     if (err) {
+       console.log('Error in SignUp: ' + err);
+       return done(err);
+     }
+
+     // wrong user object
+     if (!user) {
+       console.log('Wrong user');
+       return done(null, false);
+     }
+
+     // wrong user password
+     if (password !== user.password) {
+       console.log('Wrong password');
+       return done(null, false);
+     }
+
+     // existsting user
+     console.log('Existing user login');
+     return done(null, user);
+
+  });
+}));
+
+//register route
+app.post('/register', passport.authenticate('register'), function(req, res) {
+ res.json(req.user);
+});
+
+// send the current user back!
+app.get('/currentUser', function (req, res) {
+ res.send(req.user);
+});
+
+//login route
+app.post('/login', passport.authenticate('login'), function(req, res) {
+ res.json(req.user);
+});
+
+// logout route
+app.get('/logout', function(req, res){
+ req.logout();
+ console.log("Logged out!")
+ res.redirect('/');
+});
+
 
 app.listen(8000);
